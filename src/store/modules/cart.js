@@ -28,6 +28,9 @@ export default {
         INCREMENT_QUANTITY: (state, { id }) => {
             state.cartList.find(v => v.id === id).quantity++
         },
+        INITIALIZE_CART_LIST: (state, cartList) => {
+            state.cartList = cartList
+        }
 
     },
     actions: {
@@ -44,6 +47,10 @@ export default {
                 // 加入购物车后减少库存
                 commit('products/DECREMENT_INVENTORY', { id: product.id }, { root: true })
             }
+        },
+        initializeCartList({ commit }) {
+            const cartList = JSON.parse(localStorage.getItem('cartList'))
+            commit('INITIALIZE_CART_LIST', cartList || [])
         }
     }
 }

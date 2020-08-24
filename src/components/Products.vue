@@ -28,6 +28,17 @@ export default {
       // dispatch cart actions
       this.$store.dispatch("cart/addToCart", product);
     }
+  },
+  watch: {
+    products: {
+      handler(newVal) {
+        // 每次有改变就重新存localStorage
+        // 有没有办法不深度监听，值监听 products.inventory 字段就可以了
+        // 就像 React shouldComponentUpdate 
+        localStorage.setItem('products',JSON.stringify(newVal))
+      },
+      deep: true
+    }
   }
 };
 </script>
