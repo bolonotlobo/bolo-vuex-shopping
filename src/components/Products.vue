@@ -5,6 +5,7 @@
       <li v-for="product in products" :key="product.id">
         {{product.id}} -- {{product.name}}--{{product.price | currency}}--{{product.inventory}}
         <button
+          :disabled="product.inventory===0"
           @click="addToCart(product)"
         >加入购物车</button>
       </li>

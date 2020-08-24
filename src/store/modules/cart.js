@@ -27,16 +27,22 @@ export default {
         },
         INCREMENT_QUANTITY: (state, { id }) => {
             state.cartList.find(v => v.id === id).quantity++
-        }
+        },
+
     },
     actions: {
-        addToCart({ commit, state }, product) {
-            // 判断购物车中是否已经存在
-            const cartItem = state.cartList.find(v => v.id === product.id)
-            if (cartItem) { // 如果有
-                commit('INCREMENT_QUANTITY', { id: product.id })
-            } else { // 没有
-                commit('ADD_TO_CART', { id: product.id, quantity: 1 })
+        addToCart({ commit, state }, product = {}) {
+            // 判断是否有库存
+            if (product.inventory > 0) {
+                // 判断购物车中是否已经存在
+                const cartItem = state.cartList.find(v => v.id === product.id)
+                if (cartItem) { // 如果有
+                    commit('INCREMENT_QUANTITY', { id: product.id })
+                } else { // 没有
+                    commit('ADD_TO_CART', { id: product.id, quantity: 1 })
+                }
+                // 加入购物车后减少库存
+                commit('products/DECREMENT_INVENTORY', { id: product.id }, { root: true })
             }
         }
     }

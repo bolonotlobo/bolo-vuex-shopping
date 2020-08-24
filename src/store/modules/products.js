@@ -3,11 +3,14 @@ import * as service from '@/apis/index.js'
 export default {
     namespaced: true,
     state: {
-        products:[]
+        products: []
     },
     mutations: {
         SET_PRODUCTS: (state, products) => {
             state.products = products
+        },
+        DECREMENT_INVENTORY: (state, { id }) => {
+            state.products.find(v => v.id === id).inventory--
         }
     },
     actions: {
@@ -17,7 +20,7 @@ export default {
                 const ret = await service.getAllProducts()
                 if (ret.status === 200) {
                     const products = ret.data.result
-                    commit('SET_PRODUCTS',products)
+                    commit('SET_PRODUCTS', products)
                 }
             } catch (err) {
                 console.log(err)
