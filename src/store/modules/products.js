@@ -11,15 +11,21 @@ export default {
         },
         DECREMENT_INVENTORY: (state, { id }) => {
             state.products.find(v => v.id === id).inventory--
+        },
+        INCREMENT_INVENTORY: (state, id) => {
+            state.products.find(v => v.id === id).inventory++
         }
     },
     actions: {
-        async getAllProducts({ commit }) {
+        async getAllProducts({ commit,dispatch }) {
             // 判断 localStorage 里面是否存有 products
             let products = JSON.parse(localStorage.getItem('products'))
             if (products) {
                 // localStorage 里有 products
                 commit('SET_PRODUCTS', products)
+                // 在这里去dispatch 
+                // 先拿到 products 再去拿 cartList
+                dispatch('cart/initializeCartList',null,{root:true})
             } else {
                 try {
                     // 发起请求获取商品数据

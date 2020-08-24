@@ -30,10 +30,19 @@ export default {
         },
         INITIALIZE_CART_LIST: (state, cartList) => {
             state.cartList = cartList
+        },
+        DECREMENT_QUANTITY: (state, id) => {
+            // 购物车数量减1
+            state.cartList.find(v => v.id === id).quantity--
         }
 
     },
     actions: {
+        /**
+         * 加入购物车
+         * @param {*} param0 
+         * @param {*} product 
+         */
         addToCart({ commit, state }, product = {}) {
             // 判断是否有库存
             if (product.inventory > 0) {
@@ -48,9 +57,20 @@ export default {
                 commit('products/DECREMENT_INVENTORY', { id: product.id }, { root: true })
             }
         },
+        /**
+         * 如果 localStorage 有 cartList 信息 初始化购物车
+         * @param {*} param0 
+         */
         initializeCartList({ commit }) {
             const cartList = JSON.parse(localStorage.getItem('cartList'))
             commit('INITIALIZE_CART_LIST', cartList || [])
+        },
+        decrementQuantity({ commit }, id) {
+            // cartList quantity -1
+            // products inventory +1
+            // 没有 事务 怎么办？
+            commit('DECREMENT_QUANTITY', id)
+            commit('products/INCREMENT_INVENTORY',id,{root:true})
         }
     }
 }
